@@ -1,0 +1,22 @@
+Downloaded Raspian from here:
+https://www.raspberrypi.org/downloads/raspbian/
+
+setup SD card with raspian jessie (terminal commands in mac)
+unmount any disks that relate to the SD card
+	> diskutil list
+	> diskutil unmount /dev/disk2s1 
+	> diskutil unmount /dev/disk2s2
+Burn raspian image (rdisk2 may change depending on what's connected at the moment)
+	> sudo dd bs=1m if=~/Downloads/2016-11-25-raspbian-jessie.img of=/dev/rdisk2
+enable ssh
+	> sudo touch /Volumes/Untitled/
+	> sudo touch /Volumes/Untitled/
+add wifi creds (add indented bit after command)
+	> sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
+	network={
+			ssid="network_name"
+			psk="password"
+	}
+
+(put SD card in and boot raspi)
+
