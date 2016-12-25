@@ -1,22 +1,51 @@
-Downloaded Raspian from here:
+Downloaded Raspbian from here:
 https://www.raspberrypi.org/downloads/raspbian/
 
-setup SD card with raspian jessie (terminal commands in mac)
+== setup SD card with raspian jessie (terminal commands in mac) ==
+
 unmount any disks that relate to the SD card
-	> diskutil list
-	> diskutil unmount /dev/disk2s1 
-	> diskutil unmount /dev/disk2s2
+[mac]	> diskutil list
+[mac]	> diskutil unmount /dev/disk2s1 
+[mac]	> diskutil unmount /dev/disk2s2
+
 Burn raspian image (rdisk2 may change depending on what's connected at the moment)
-	> sudo dd bs=1m if=~/Downloads/2016-11-25-raspbian-jessie.img of=/dev/rdisk2
-enable ssh
-	> sudo touch /Volumes/Untitled/
-	> sudo touch /Volumes/Untitled/
-add wifi creds (add indented bit after command)
-	> sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
-	network={
-			ssid="network_name"
-			psk="password"
-	}
+[mac]	> sudo dd bs=1m if=~/Downloads/2016-11-25-raspbian-jessie.img of=/dev/rdisk2
+
+enable ssh by placing an empty file called ssh in /boot/ (not entirely clear which one they meant so I'm trying both places called boot):
+[mac]	> sudo touch /Volumes/Untitled/boot/ssh
+[mac]	> sudo touch /Volumes/boot/ssh
+
+add wifi creds (add indented bit after command to the file)
+[mac]	> sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
++		network={
++				ssid="network_name"
++				psk="password"
++		}
 
 (put SD card in and boot raspi)
 
+find the IP using terminal in mac and connect to it
+[mac]	> sudo nmap -sn 192.168.0.0/24
+[mac]	> ssh pi@192.168.0.120
+
+set a new password because duh
+[pi]	> passwd
+
+bring over public key using scp
+[mac]	> scp ~/.ssh/syvert.pub pi@192.168.0.120:~/.ssh/authorized_keys
+[pi]	> chmod 644 ~/.ssh/authorized_keys
+
+disable login with password
+[pi]	> sudo nano /etc/ssh/sshd_config
+set below params:
++		ChallengeResponseAuthentication no
++		PasswordAuthentication no
++		UsePAM no
+
+[pi]	> sudo /etc/init.d/ssh restart
+
+let's try out the 3.5mm jack (copied a song over with scp already)
+[pi]	> omxplayer lets_make_the_water_turn_black.mp3
+
+set up vnc server
+[pi]	> vncserver
